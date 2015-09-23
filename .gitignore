@@ -1,0 +1,13 @@
+gfx.*
+*.ihx
+*.lk
+*.lst
+*.map
+*.noi
+*.sym
+*.asm
+*.sav
+/*.rel
+*.sms
+/*.sav
+/examples-gb/*.rel

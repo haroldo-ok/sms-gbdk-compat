@@ -10,3 +10,4 @@ gfx.*
 /*.rel
 /*.sav
 /examples-gb/*.rel
+/lib/gb/*.rel

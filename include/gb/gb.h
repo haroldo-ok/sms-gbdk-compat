@@ -1,6 +1,7 @@
 #ifndef _GB_H
 #define _GB_H
 
+#include <SMSlib.h>
 #include <types.h>
 #include <hardware.h>
 #include <sgb.h>
@@ -8,21 +9,21 @@
 
 /* Joypad bits */
 
-#define	J_START      0x80U
-#define	J_SELECT     0x40U
-#define	J_B          0x20U
-#define	J_A          0x10U
-#define	J_DOWN       0x08U
-#define	J_UP         0x04U
-#define	J_LEFT       0x02U
-#define	J_RIGHT      0x01U
+#define	J_START      GG_KEY_START
+#define	J_SELECT     PORT_B_KEY_START
+#define	J_B          PORT_A_KEY_2
+#define	J_A          PORT_A_KEY_1
+#define	J_DOWN       PORT_A_KEY_DOWN
+#define	J_UP         PORT_A_KEY_UP
+#define	J_LEFT       PORT_A_KEY_LEFT
+#define	J_RIGHT      PORT_A_KEY_RIGHT
 
 /* Modes */
 
 #define	M_DRAWING    0x01U
 #define	M_TEXT_OUT   0x02U
 #define	M_TEXT_INOUT 0x03U
-/* Set this in addition to the others to disable scrolling 
+/* Set this in addition to the others to disable scrolling
    If scrolling is disabled, the cursor returns to (0,0) */
 #define M_NO_SCROLL  0x04U
 /* Set this to disable \n interpretation */
@@ -193,10 +194,10 @@ hiramcpy(UBYTE dst,
 /* ************************************************************ */
 
 #define DISPLAY_ON \
-  LCDC_REG|=0x80U
+  SMS_displayOn()
 
 #define DISPLAY_OFF \
-  display_off();
+  SMS_displayOff();
 
 #define SHOW_BKG \
   LCDC_REG|=0x01U
@@ -217,10 +218,10 @@ hiramcpy(UBYTE dst,
   LCDC_REG&=0xFDU
 
 #define SPRITES_8x16 \
-  LCDC_REG|=0x04U
+  SMS_VDPturnOnFeature(VDPFEATURE_USETALLSPRITES)
 
 #define SPRITES_8x8 \
-  LCDC_REG&=0xFBU
+	SMS_VDPturnOffFeature(VDPFEATURE_USETALLSPRITES)
 
 /* ************************************************************ */
 

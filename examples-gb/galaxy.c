@@ -23,6 +23,7 @@
  * since it can't be made transparent
  */
 
+#define TARGET_GG
 #include <gb.h>
 
 unsigned char std_data[] = {

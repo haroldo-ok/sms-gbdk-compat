@@ -1,6 +1,8 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
+#define INT_16_BITS
+
 #ifndef INT_8_BITS
 #ifndef INT_16_BITS
 #error "INT_8_BITS or INT_16_BITS must be defined"

@@ -9,5 +9,6 @@ gfx.*
 *.sav
 /*.rel
 *.sms
+*.gg
 /*.sav
 /examples-gb/*.rel

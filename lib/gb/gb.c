@@ -1,4 +1,5 @@
 
+#define TARGET_GG
 #include <gb.h>
 
 void add_VBL(int_handler h) {}
@@ -105,3 +106,18 @@ void set_sprite_prop(UBYTE nb, UBYTE prop) {}
 UBYTE get_sprite_prop(UBYTE nb) {}
 void move_sprite(UBYTE nb, UBYTE x, UBYTE y) {}
 void scroll_sprite(BYTE nb, BYTE x, BYTE y) {}
+
+
+/* ************************************************************ */
+
+
+void cgb_compatibility(void) {
+  GG_setBGPaletteColor (0, 0x012);
+  GG_setSpritePaletteColor (0, 0x012);
+  GG_setBGPaletteColor (1, 0x345);
+  GG_setSpritePaletteColor (1, 0x345);
+  GG_setBGPaletteColor (2, 0x89A);
+  GG_setSpritePaletteColor (2, 0x89A);
+  GG_setBGPaletteColor (3, 0xDEF);
+  GG_setSpritePaletteColor (3, 0xDEF);
+}

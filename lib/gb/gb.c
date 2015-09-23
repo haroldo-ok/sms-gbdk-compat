@@ -83,7 +83,16 @@ void set_bkg_data(UBYTE first_tile, UBYTE nb_tiles, unsigned char *data) {
 }
 
 void set_bkg_tiles(UBYTE x, UBYTE y, UBYTE w, UBYTE h, unsigned char *tiles) {
-  SMS_loadTileMapArea(x, y, tiles, w, h);
+  UBYTE i;
+  UWORD buffer[32], *d;
+
+  for (; h; h--, y++) {
+    d = buffer;
+    for (i = w; i; i--, d++, tiles++) {
+      *d = *tiles;
+    }
+    SMS_loadTileMapArea(x, y, buffer, w, 1);
+  }
 }
 
 void get_bkg_tiles(UBYTE x,

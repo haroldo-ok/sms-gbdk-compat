@@ -477,6 +477,7 @@ void animate_sprite()
     if(sframe == NBSFRAMES)
       sframe = 0;
     tile_sprite();
+    SMS_copySpritestoSAT();
   }
 }
 
@@ -504,9 +505,10 @@ void main()
   disable_interrupts();
   DISPLAY_OFF;
   LCDC_REG = 0x67;
+  SPRITES_8x16;
 
   cgb_compatibility();
-  
+
   /*
    * LCD        = Off
    * WindowBank = 0x9C00

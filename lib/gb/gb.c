@@ -2,6 +2,7 @@
 #define TARGET_GG
 #include <gb.h>
 
+
 void add_VBL(int_handler h) {}
 void add_LCD(int_handler h) {}
 void add_TIM(int_handler h) {}
@@ -125,17 +126,32 @@ void scroll_win(BYTE x, BYTE y) {}
 /* ************************************************************ */
 
 
+extern unsigned char SpriteTableY[];
+extern unsigned char SpriteTableXN[];
+
 void set_sprite_data(UBYTE first_tile, UBYTE nb_tiles, unsigned char *data) {
   SMS_loadTiles_2bpp(((UWORD) first_tile) + 256, nb_tiles, data);
 }
 
 void get_sprite_data(UBYTE first_tile, UBYTE nb_tiles, unsigned char *data) {}
-void set_sprite_tile(UBYTE nb, UBYTE tile) {}
-UBYTE get_sprite_tile(UBYTE nb) {}
+
+void set_sprite_tile(UBYTE nb, UBYTE tile) {
+  SpriteTableXN[(nb << 1) + 1] = tile;
+}
+UBYTE get_sprite_tile(UBYTE nb) {
+    return SpriteTableXN[(nb << 1) + 1];
+}
+
 void set_sprite_prop(UBYTE nb, UBYTE prop) {}
 UBYTE get_sprite_prop(UBYTE nb) {}
-void move_sprite(UBYTE nb, UBYTE x, UBYTE y) {}
-void scroll_sprite(BYTE nb, BYTE x, BYTE y) {}
+
+void move_sprite(UBYTE nb, UBYTE x, UBYTE y) {
+  SpriteTableXN[nb << 1] = x;
+  SpriteTableY[nb] = y;
+}
+void scroll_sprite(BYTE nb, BYTE x, BYTE y) {
+  move_sprite(nb, SpriteTableXN[nb << 1] + x, SpriteTableY[nb] + y);
+}
 
 
 /* ************************************************************ */

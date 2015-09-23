@@ -1,5 +1,5 @@
 SHELL=C:/Windows/System32/cmd.exe
-CC	= sdcc -mz80
+CC	= sdcc -mz80 -I ../include/gb
 
 BINS	= galaxy.sms
 

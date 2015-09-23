@@ -60,8 +60,26 @@ void display_off(void) {
 
 /* ************************************************************ */
 
+void SMS_loadTiles_2bpp(UWORD first_tile, UBYTE nb_tiles, unsigned char *data) {
+  UWORD i;
+  UBYTE j;
+	unsigned char buffer[32], *o, *d;
+
+	o = data;
+	for (i = 0; i != nb_tiles; i++) {
+		d = buffer;
+		for (j = 0; j != 8; j++) {
+			*d = *o; o++; d++;
+      *d = *o; o++; d++;
+			*d = 0;	d++;
+			*d = 0;	d++;
+		}
+		SMS_loadTiles(buffer, i + first_tile, 32);
+	}
+}
+
 void set_bkg_data(UBYTE first_tile, UBYTE nb_tiles, unsigned char *data) {
-  SMS_loadTiles (data, first_tile, nb_tiles);
+  SMS_loadTiles_2bpp(first_tile, nb_tiles, data);
 }
 
 void set_bkg_tiles(UBYTE x, UBYTE y, UBYTE w, UBYTE h, unsigned char *tiles) {
@@ -98,7 +116,10 @@ void scroll_win(BYTE x, BYTE y) {}
 /* ************************************************************ */
 
 
-void set_sprite_data(UBYTE first_tile, UBYTE nb_tiles, unsigned char *data) {}
+void set_sprite_data(UBYTE first_tile, UBYTE nb_tiles, unsigned char *data) {
+  SMS_loadTiles_2bpp(((UWORD) first_tile) + 256, nb_tiles, data);
+}
+
 void get_sprite_data(UBYTE first_tile, UBYTE nb_tiles, unsigned char *data) {}
 void set_sprite_tile(UBYTE nb, UBYTE tile) {}
 UBYTE get_sprite_tile(UBYTE nb) {}
@@ -112,12 +133,12 @@ void scroll_sprite(BYTE nb, BYTE x, BYTE y) {}
 
 
 void cgb_compatibility(void) {
-  GG_setBGPaletteColor (0, 0x012);
-  GG_setSpritePaletteColor (0, 0x012);
-  GG_setBGPaletteColor (1, 0x345);
-  GG_setSpritePaletteColor (1, 0x345);
-  GG_setBGPaletteColor (2, 0x89A);
-  GG_setSpritePaletteColor (2, 0x89A);
-  GG_setBGPaletteColor (3, 0xDEF);
-  GG_setSpritePaletteColor (3, 0xDEF);
+  GG_setBGPaletteColor (0, 0xDEF);
+  GG_setSpritePaletteColor (0, 0xDEF);
+  GG_setBGPaletteColor (1, 0x89A);
+  GG_setSpritePaletteColor (1, 0x89A);
+  GG_setBGPaletteColor (2, 0x455);
+  GG_setSpritePaletteColor (2, 0x455);
+  GG_setBGPaletteColor (3, 0x022);
+  GG_setSpritePaletteColor (3, 0x022);
 }

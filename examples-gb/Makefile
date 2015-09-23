@@ -13,7 +13,7 @@ all:	$(BINS)
 	ihx2sms $< $@
 
 galaxy.ihx:	galaxy.rel ../lib/gb/gb.rel
-	$(CC) --data-loc 0xC000 $< gb.rel ../SMSlib/SMSlib.rel
+	$(CC) --data-loc 0xC000 $< gb.rel ../SMSlib/SMSlib_GG.rel
 
 clean:
 	rm -f *.ihx *.lk *.lst *.map *.noi *.rel *.sym *.asm *.sms

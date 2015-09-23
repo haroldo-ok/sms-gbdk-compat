@@ -504,6 +504,9 @@ void main()
   disable_interrupts();
   DISPLAY_OFF;
   LCDC_REG = 0x67;
+
+  cgb_compatibility();
+  
   /*
    * LCD        = Off
    * WindowBank = 0x9C00

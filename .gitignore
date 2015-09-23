@@ -10,4 +10,5 @@ gfx.*
 /*.rel
 /*.sav
 /examples-gb/*.rel
+/examples-gb/dscan/*.rel
 /lib/gb/*.rel

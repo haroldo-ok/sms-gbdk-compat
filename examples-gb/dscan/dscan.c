@@ -4,43 +4,17 @@
  * Mr. N.U. of TeamKNOx                                             *
  ********************************************************************/
 
+#define TARGET_GG
 #include <gb.h>
 #include <stdlib.h>
 #include <rand.h>
 
 /* bitmaps */
 #include "bkg.h"
-#include "bkg.c"
-#include "bkg_m.c"
-#include "bkg_c.c"
 #include "fore.h"
-#include "fore.c"
+#include "bkg_m.c"
 
 /* ************************************************************ */
-
-UWORD bkg_p[] =
-{
-  bkgCGBPal0c0,bkgCGBPal0c1,bkgCGBPal0c2,bkgCGBPal0c3,
-  bkgCGBPal1c0,bkgCGBPal1c1,bkgCGBPal1c2,bkgCGBPal1c3,
-  bkgCGBPal2c0,bkgCGBPal2c1,bkgCGBPal2c2,bkgCGBPal2c3,
-  bkgCGBPal3c0,bkgCGBPal3c1,bkgCGBPal3c2,bkgCGBPal3c3,
-  bkgCGBPal4c0,bkgCGBPal4c1,bkgCGBPal4c2,bkgCGBPal4c3,
-  bkgCGBPal5c0,bkgCGBPal5c1,bkgCGBPal5c2,bkgCGBPal5c3,
-  bkgCGBPal6c0,bkgCGBPal6c1,bkgCGBPal6c2,bkgCGBPal6c3,
-  bkgCGBPal7c0,bkgCGBPal7c1,bkgCGBPal7c2,bkgCGBPal7c3
-};
-
-UWORD obj_p[] =
-{
-  foreCGBPal0c0,foreCGBPal0c1,foreCGBPal0c2,foreCGBPal0c3,
-  foreCGBPal1c0,foreCGBPal1c1,foreCGBPal1c2,foreCGBPal1c3,
-  foreCGBPal2c0,foreCGBPal2c1,foreCGBPal2c2,foreCGBPal2c3,
-  foreCGBPal3c0,foreCGBPal3c1,foreCGBPal3c2,foreCGBPal3c3,
-  foreCGBPal4c0,foreCGBPal4c1,foreCGBPal4c2,foreCGBPal4c3,
-  foreCGBPal5c0,foreCGBPal5c1,foreCGBPal5c2,foreCGBPal5c3,
-  foreCGBPal6c0,foreCGBPal6c1,foreCGBPal6c2,foreCGBPal6c3,
-  foreCGBPal7c0,foreCGBPal7c1,foreCGBPal7c2,foreCGBPal7c3
-};
 
 /* screen size */
 #define MIN_SX		5U		/* min x (char) */
@@ -48,7 +22,7 @@ UWORD obj_p[] =
 #define MIN_SY		5U		/* min y (char) */
 #define MAX_SY		(MIN_SY+13U)	/* max y (char) */
 
-#define DEF_SP		30U		/* sprite null char code */	
+#define DEF_SP		30U		/* sprite null char code */
 
 /* player */
 #define MIN_PX		(MIN_SX*8U+8U)	/* min x (dot) */
@@ -118,25 +92,7 @@ fixed seed;
 
 void set_sprite_attrb( UBYTE nb, UBYTE tile )
 {
-  if( _cpu==CGB_TYPE ) {
-    set_sprite_prop( nb, tile );
-  }
-}
-
-
-void set_bkg_attr( UBYTE x, UBYTE y, UBYTE sx, UBYTE sy, unsigned char *d )
-{
-  UBYTE xx, yy;
-
-  VBK_REG = 1;		/* select palette bank */
-  for( yy=0; yy<sy; yy++ ) {
-    for( xx=0; xx<sx; xx++ ) {
-      msg_tile[xx] = bkgCGB[(unsigned int)*d];
-      d++;
-    }
-    set_bkg_tiles( x, y+yy, sx, 1, msg_tile );
-  }
-  VBK_REG = 0;		/* select data bank */
+  set_sprite_prop( nb, tile );
 }
 
 UBYTE make_rnd( UBYTE i )
@@ -217,31 +173,7 @@ void init_screen()
 {
   UBYTE n;
 
-  if( _cpu==CGB_TYPE ) {
-    /* Transfer color palette */
-    set_bkg_palette( 0, 1, &bkg_p[0] );
-    set_bkg_palette( 1, 1, &bkg_p[4] );
-    set_bkg_palette( 2, 1, &bkg_p[8] );
-    set_bkg_palette( 3, 1, &bkg_p[12] );
-    set_bkg_palette( 4, 1, &bkg_p[16] );
-    set_bkg_palette( 5, 1, &bkg_p[20] );
-    set_bkg_palette( 6, 1, &bkg_p[24] );
-    set_bkg_palette( 7, 1, &bkg_p[28] );
-    set_sprite_palette( 0, 1, &obj_p[0] );
-    set_sprite_palette( 1, 1, &obj_p[4] );
-    set_sprite_palette( 2, 1, &obj_p[8] );
-    set_sprite_palette( 3, 1, &obj_p[12] );
-    set_sprite_palette( 4, 1, &obj_p[16] );
-    set_sprite_palette( 5, 1, &obj_p[20] );
-    set_sprite_palette( 6, 1, &obj_p[24] );
-    set_sprite_palette( 7, 1, &obj_p[28] );
-
-    /* set attributes */
-    set_bkg_attr( 0, 0, 20, 18, bkg_c );
-    set_bkg_tiles(  0, 0, 20, 18, bkg_c );
-  } else {
-    set_bkg_tiles(  0, 0, 20, 18, bkg_m );
-  }
+  set_bkg_tiles(  0, 0, 20, 18, bkg_m );
 
   pw = 50;
   set_bkg_data(  0, 96, bkg );
@@ -261,10 +193,8 @@ void init_player()
 {
   pf = 0; px = DEF_PX;
   set_sprite_tile( 0, 0 );
-  set_sprite_attrb( 0, foreCGB[0] );
   move_sprite( 0, px, DEF_PY );
   set_sprite_tile( 1, 1 );
-  set_sprite_attrb( 1, foreCGB[1] );
   move_sprite( 1, px+8, DEF_PY );
 }
 
@@ -277,7 +207,6 @@ void init_tama()
     tx[i] = i*4+DEF_TX;
     ty[i] = DEF_TY;
     set_sprite_tile( i+DEF_TS, tf[i]+DEF_TC );
-    set_sprite_attrb( i+DEF_TS, foreCGB[tf[i]+DEF_TC] );
     move_sprite( i+DEF_TS, tx[i], ty[i] );
   }
 }
@@ -382,9 +311,7 @@ void player()
   if( pf > 1 ) {
     if( pf < DEF_PF ) {
       set_sprite_tile( 0, pf*2+DEF_PC0 );
-      set_sprite_attrb( 0, foreCGB[pf*2+DEF_PC0] );
       set_sprite_tile( 1, pf*2+DEF_PC1 );
-      set_sprite_attrb( 1, foreCGB[pf*2+DEF_PC1] );
       pf++;
     } else {
       set_sprite_tile( 0, DEF_SP );
@@ -442,7 +369,6 @@ void bombs()
         tf[i] = 3-tf[i];
       }
       set_sprite_tile( i+DEF_TS, tf[i]+DEF_TC );
-      set_sprite_attrb( i+DEF_TS, foreCGB[tf[i]+DEF_TC] );
       move_sprite( i+DEF_TS, tx[i], ty[i] );
     }
   }
@@ -497,13 +423,10 @@ void enemys()
                 /* hit */
                 tf[j] = 0; tx[j] = j*4+DEF_TX; ty[j] = DEF_TY;
                 set_sprite_tile( j+DEF_TS, tf[j]+DEF_TC );
-                set_sprite_attrb( j+DEF_TS, foreCGB[tf[j]+DEF_TC] );
                 move_sprite( j+DEF_TS, tx[j], ty[j] );
                 ef[i] = 3;
                 set_sprite_tile( i*2+DEF_ES0, ef[i]*2+DEF_BC1 );
-                set_sprite_attrb( i*2+DEF_ES0, foreCGB[ef[i]*2+DEF_BC1] );
                 set_sprite_tile( i*2+DEF_ES1, ef[i]*2+DEF_BC2 );
-                set_sprite_attrb( i*2+DEF_ES1, foreCGB[ef[i]*2+DEF_BC2] );
               }
             }
           }
@@ -597,13 +520,10 @@ void enemys()
                 /* hit */
                 tf[j] = 0; tx[j] = j*4+DEF_TX; ty[j] = DEF_TY;
                 set_sprite_tile( j+DEF_TS, tf[j]+DEF_TC );
-                set_sprite_attrb( j+DEF_TS, foreCGB[tf[j]+DEF_TC] );
                 move_sprite( j+DEF_TS, tx[j], ty[j] );
                 ef[i] = 3;
                 set_sprite_tile( i*2+DEF_ES0, ef[i]*2+DEF_BC1 );
-                set_sprite_attrb( i*2+DEF_ES0, foreCGB[ef[i]*2+DEF_BC1] );
                 set_sprite_tile( i*2+DEF_ES1, ef[i]*2+DEF_BC2 );
-                set_sprite_attrb( i*2+DEF_ES1, foreCGB[ef[i]*2+DEF_BC2] );
               }
             }
           }
@@ -642,9 +562,7 @@ void enemys()
         }
       } else {
         set_sprite_tile( i*2+DEF_ES0, ef[i]*2+DEF_BC1 );
-        set_sprite_attrb( i*2+DEF_ES0, foreCGB[ef[i]*2+DEF_BC1] );
         set_sprite_tile( i*2+DEF_ES1, ef[i]*2+DEF_BC2 );
-        set_sprite_attrb( i*2+DEF_ES1, foreCGB[ef[i]*2+DEF_BC2] );
         ef[i]++;
       }
     } else if( i == 9 ) {
@@ -656,9 +574,7 @@ void enemys()
         ef[i] = i%2+1;
         ex[i] = MIN_EX;
         set_sprite_tile( i*2+DEF_ES0, DEF_XEC0 );
-        set_sprite_attrb( i*2+DEF_ES0, foreCGB[DEF_XEC0] );
         set_sprite_tile( i*2+DEF_ES1, DEF_XEC1 );
-        set_sprite_attrb( i*2+DEF_ES1, foreCGB[DEF_XEC1] );
         move_sprite( i*2+DEF_ES0, ex[i]-SUB_EX0, ey[i] );
         move_sprite( i*2+DEF_ES1, ex[i]-SUB_EX1, ey[i] );
       }
@@ -670,15 +586,11 @@ void enemys()
         if( ef[i] == 1 ) {
           ex[i] = MAX_EX;
           set_sprite_tile( i*2+DEF_ES0, DEF_1EC0 );
-          set_sprite_attrb( i*2+DEF_ES0, foreCGB[DEF_1EC0] );
           set_sprite_tile( i*2+DEF_ES1, DEF_1EC1 );
-          set_sprite_attrb( i*2+DEF_ES1, foreCGB[DEF_1EC1] );
         } else {
           ex[i] = MIN_EX;
           set_sprite_tile( i*2+DEF_ES0, DEF_2EC0 );
-          set_sprite_attrb( i*2+DEF_ES0, foreCGB[DEF_2EC0] );
           set_sprite_tile( i*2+DEF_ES1, DEF_2EC1 );
-          set_sprite_attrb( i*2+DEF_ES1, foreCGB[DEF_2EC1] );
         }
         move_sprite( i*2+DEF_ES0, ex[i]-SUB_EX0, ey[i] );
         move_sprite( i*2+DEF_ES1, ex[i]-SUB_EX1, ey[i] );
@@ -712,7 +624,6 @@ void kirai()
         kf[i] = 3-kf[i];
       }
       set_sprite_tile( i+DEF_KS, kf[i]+DEF_KC );
-      set_sprite_attrb( i+DEF_KS, foreCGB[kf[i]+DEF_KC] );
       move_sprite( i+DEF_KS, kx[i], ky[i] );
     }
   }

@@ -1,7 +1,7 @@
 
 #define TARGET_GG
 #include <gb.h>
-
+#include <stdlib.h>
 
 void add_VBL(int_handler h) {}
 void add_LCD(int_handler h) {}
@@ -166,4 +166,33 @@ void cgb_compatibility(void) {
   GG_setSpritePaletteColor (2, 0x455);
   GG_setBGPaletteColor (3, 0x022);
   GG_setSpritePaletteColor (3, 0x022);
+}
+
+
+/* ************************************************************ */
+
+
+void initrand(UWORD seed) {
+  srand(seed);
+}
+
+UWORD randw(void) {
+  return rand();
+}
+
+/*
+ * Random generator using the linear lagged additive method
+ *
+ * Author: Luc Van den Borre
+ *
+ * Note that 'initarand()' calls 'initrand()' with the same seed value, and
+ * uses 'rand()' to initialize the random generator.
+ */
+
+void initarand(UWORD seed) {
+  srand(seed);
+}
+
+UBYTE arand(void) {
+  return rand();
 }

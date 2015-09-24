@@ -25,7 +25,8 @@ void delay(UWORD d) {
 
 
 UBYTE joypad(void) {
-  return SMS_getKeysStatus();
+  UWORD key = SMS_getKeysStatus();
+  return key | ((key & GG_KEY_START) ? J_START : 0);
 }
 
 UBYTE waitpad(UBYTE mask) {

@@ -9,7 +9,7 @@
 
 /* Joypad bits */
 
-#define	J_START      GG_KEY_START
+#define	J_START      0x80
 #define	J_SELECT     PORT_B_KEY_START
 #define	J_B          PORT_A_KEY_2
 #define	J_A          PORT_A_KEY_1

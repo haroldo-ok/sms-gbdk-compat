@@ -636,6 +636,8 @@ void main()
 {
   disable_interrupts();
   DISPLAY_OFF;
+  cgb_compatibility();
+  move_bkg(0, 0);
 
   initarand(seed.w);
   init_screen();
@@ -656,5 +658,6 @@ void main()
     bombs();
     enemys();
     kirai();
+    SMS_copySpritestoSAT();
   }
 }

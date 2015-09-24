@@ -14,7 +14,11 @@ UBYTE	get_mode(void) {}
 /* ************************************************************ */
 
 
-void delay(UWORD d) {}
+void delay(UWORD d) {
+  for (; d; d--) {
+    SMS_waitForVBlank();
+  }
+}
 
 
 /* ************************************************************ */
@@ -104,8 +108,8 @@ void get_bkg_tiles(UBYTE x,
 }
 
 void move_bkg(UBYTE x, UBYTE y) {
-  SMS_setBGScrollX(x);
-  SMS_setBGScrollY(y);
+  SMS_setBGScrollX(x + 48);
+  SMS_setBGScrollY(y - 56);
 }
 
 void scroll_bkg(BYTE x, BYTE y) {

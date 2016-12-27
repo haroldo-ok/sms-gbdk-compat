@@ -16,7 +16,11 @@ UBYTE	get_mode(void) {}
 
 void delay(UWORD d) {
   for (; d; d--) {
-    SMS_waitForVBlank();
+    //  TO DO: see how this compares to original delay
+    __asm
+      nop
+    __endasm;
+
   }
 }
 

@@ -186,6 +186,11 @@ void cgb_compatibility(void) {
 
 void smsgbdk_init(UBYTE mode) {
   unsigned char k;
+  move_bkg(0, 0);
+  SMS_initSprites ();
+  for (k=0;k<128;k++)
+    SMS_reserveSprite ();
+  SMS_finalizeSprites ();
   if (mode==SMSGBDK_MODE_GBC)
     cgb_compatibility();
   else if (mode==SMSGBDK_MODE_GRAYSCALE) {

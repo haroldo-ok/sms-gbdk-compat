@@ -3,13 +3,14 @@
 #include <gb.h>
 #include <stdlib.h>
 
+#pragma disable_warning 85
 void add_VBL(int_handler h) {}
 void add_LCD(int_handler h) {}
 void add_TIM(int_handler h) {}
 void add_SIO(int_handler h) {}
 void add_JOY(int_handler h) {}
 void mode(UBYTE m) {}
-UBYTE	get_mode(void) {}
+UBYTE	get_mode(void) { return 0; }
 
 /* ************************************************************ */
 
@@ -61,6 +62,7 @@ void reset(void) {}
 
 void wait_vbl_done(void) {
   SMS_waitForVBlank();
+  SMS_copySpritestoSAT();
 }
 
 void display_off(void) {
@@ -147,17 +149,20 @@ void get_sprite_data(UBYTE first_tile, UBYTE nb_tiles, unsigned char *data) {}
 void set_sprite_tile(UBYTE nb, UBYTE tile) {
   SpriteTableXN[(nb << 1) + 1] = tile;
 }
+
 UBYTE get_sprite_tile(UBYTE nb) {
     return SpriteTableXN[(nb << 1) + 1];
 }
 
 void set_sprite_prop(UBYTE nb, UBYTE prop) {}
-UBYTE get_sprite_prop(UBYTE nb) {}
+
+UBYTE get_sprite_prop(UBYTE nb) { return 0; }
 
 void move_sprite(UBYTE nb, UBYTE x, UBYTE y) {
-  SpriteTableXN[nb << 1] = x;
-  SpriteTableY[nb] = y;
+  SpriteTableXN[nb << 1] = x+((256-160)/2-8);
+  SpriteTableY[nb] = y+((192-144)/2-16-1);
 }
+
 void scroll_sprite(BYTE nb, BYTE x, BYTE y) {
   move_sprite(nb, SpriteTableXN[nb << 1] + x, SpriteTableY[nb] + y);
 }
@@ -177,6 +182,32 @@ void cgb_compatibility(void) {
   GG_setSpritePaletteColor (3, 0x022);
 }
 
+/* ************************************************************ */
+
+void smsgbdk_init(UBYTE mode) {
+  unsigned char k;
+  if (mode==SMSGBDK_MODE_GBC)
+    cgb_compatibility();
+  else if (mode==SMSGBDK_MODE_GRAYSCALE) {
+    GG_setBGPaletteColor (0, RGBHTML(0xEFEFEF));
+    GG_setSpritePaletteColor (0, RGBHTML(0xEFEFEF));
+    GG_setBGPaletteColor (1, RGBHTML(0xAEAEAE));
+    GG_setSpritePaletteColor (1, RGBHTML(0xAEAEAE));
+    GG_setBGPaletteColor (2, RGBHTML(0x535353));
+    GG_setSpritePaletteColor (2, RGBHTML(0x535353));
+    GG_setBGPaletteColor (3, RGBHTML(0x0C0C0C));
+    GG_setSpritePaletteColor (3, RGBHTML(0x0C0C0C));
+  } else {   // normal 'green' mode
+    GG_setBGPaletteColor (0, RGBHTML(0xDFF9CE));
+    GG_setSpritePaletteColor (0, RGBHTML(0xDFF9CE));
+    GG_setBGPaletteColor (1, RGBHTML(0x86C16C));
+    GG_setSpritePaletteColor (1, RGBHTML(0x86C16C));
+    GG_setBGPaletteColor (2, RGBHTML(0x326856));
+    GG_setSpritePaletteColor (2, RGBHTML(0x326856));
+    GG_setBGPaletteColor (3, RGBHTML(0x071820));
+    GG_setSpritePaletteColor (3, RGBHTML(0x071820));
+  }
+}
 
 /* ************************************************************ */
 

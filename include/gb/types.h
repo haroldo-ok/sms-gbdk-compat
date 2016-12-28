@@ -37,6 +37,8 @@ typedef UINT32		   UDWORD;
 
 typedef void *             POINTER;
 
+typedef _Bool              BOOLEAN;
+
 #define	NULL     0
 
 #define	FALSE    0

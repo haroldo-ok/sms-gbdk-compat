@@ -151,16 +151,6 @@ extern UBYTE _io_out;
 /* ************************************************************ */
 
 void
-smsgbdk_init(UBYTE mode);
-
-#define SMSGBDK_MODE_NORMAL     0
-#define SMSGBDK_MODE_GRAYSCALE  1
-#define SMSGBDK_MODE_GBC        2
-
-
-/* ************************************************************ */
-
-void
 delay(UWORD d);
 
 /* ************************************************************ */

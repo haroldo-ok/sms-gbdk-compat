@@ -1,14 +1,20 @@
-
 #define TARGET_GG
 #include <gb.h>
 #include <stdlib.h>
 
+/* library vars */
+
+UBYTE smsgbdk_scrollX, smsgbdk_scrollY;
+
 #pragma disable_warning 85
 void add_VBL(int_handler h) {}
+void remove_VBL(UINT8 h) {}
 void add_LCD(int_handler h) {}
+void remove_LCD(UINT8 h) {}
 void add_TIM(int_handler h) {}
 void add_SIO(int_handler h) {}
 void add_JOY(int_handler h) {}
+
 void mode(UBYTE m) {}
 UBYTE	get_mode(void) { return 0; }
 
@@ -115,12 +121,17 @@ void get_bkg_tiles(UBYTE x,
 }
 
 void move_bkg(UBYTE x, UBYTE y) {
-  SMS_setBGScrollX(x + 48);
-  SMS_setBGScrollY(y - 56);
+  smsgbdk_scrollX=x;
+  SMS_setBGScrollX(x+(256-160)/2);
+  smsgbdk_scrollY=y;
+  SMS_setBGScrollY(y+0xC8);
 }
 
 void scroll_bkg(BYTE x, BYTE y) {
-
+  smsgbdk_scrollX-=x;
+  SMS_setBGScrollX(smsgbdk_scrollX+(256-160)/2);
+  smsgbdk_scrollY-=y;
+  SMS_setBGScrollY(smsgbdk_scrollY+0xC8);
 }
 
 

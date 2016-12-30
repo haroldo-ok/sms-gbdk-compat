@@ -10,11 +10,9 @@
  * Author: Luc Van den Borre
  */
 
-void
-initrand(UWORD seed);
+void initrand(UWORD seed);
 
-UWORD
-randw(void);
+UWORD randw(void);
 
 /*
  * Random generator using the linear lagged additive method
@@ -25,10 +23,10 @@ randw(void);
  * uses 'rand()' to initialize the random generator.
  */
 
-void
-initarand(UWORD seed);
+void initarand(UWORD seed);
 
-UBYTE
-arand(void);
+UBYTE arand(void);
+
+#define rand()   randw()
 
 #endif /* _GB_H */

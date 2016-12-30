@@ -11,7 +11,7 @@
 #endif /* INT_8_BITS */
 
 #ifdef INT_16_BITS
-typedef char               INT8;
+typedef signed char        INT8;
 typedef unsigned char      UINT8;
 typedef int                INT16;
 typedef unsigned int       UINT16;

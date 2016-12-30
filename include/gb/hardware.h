@@ -35,8 +35,8 @@
 #define NR52_REG	NO_REG	/* Sound register */
 #define LCDC_REG	NO_REG	/* LCD control */
 #define STAT_REG	NO_REG	/* LCD status */
-#define SCY_REG		NO_REG	/* Scroll Y */
-#define SCX_REG		NO_REG	/* Scroll X */
+#define SCY_REG    smsgbdk_scrollX  /* Scroll Y */
+#define SCX_REG    smsgbdk_scrollY  /* Scroll X */
 #define LY_REG		NO_REG	/* LCDC Y-coordinate */
 #define LYC_REG		NO_REG	/* LY compare */
 #define DMA_REG		NO_REG	/* DMA transfer */

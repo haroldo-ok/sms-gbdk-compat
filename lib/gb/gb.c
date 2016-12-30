@@ -2,8 +2,7 @@
 #include <gb.h>
 #include <stdlib.h>
 
-/* library vars */
-
+/* library variables */
 UBYTE smsgbdk_scrollX, smsgbdk_scrollY;
 
 #pragma disable_warning 85
@@ -43,14 +42,14 @@ UBYTE joypad(void) {
 UBYTE waitpad(UBYTE mask) {
   UBYTE joy;
   while (!(joy = joypad() & mask)) {
-    SMS_waitForVBlank();
+    wait_vbl_done();
   }
   return joy;
 }
 
 void waitpadup(void) {
   while (joypad()) {
-    SMS_waitForVBlank();
+    wait_vbl_done();
   }
 }
 
@@ -69,6 +68,8 @@ void reset(void) {}
 void wait_vbl_done(void) {
   SMS_waitForVBlank();
   SMS_copySpritestoSAT();
+  SMS_setBGScrollX(smsgbdk_scrollX+(256-160)/2);
+  SMS_setBGScrollY(smsgbdk_scrollY+0xC8);
 }
 
 void display_off(void) {
@@ -122,16 +123,12 @@ void get_bkg_tiles(UBYTE x,
 
 void move_bkg(UBYTE x, UBYTE y) {
   smsgbdk_scrollX=x;
-  SMS_setBGScrollX(x+(256-160)/2);
   smsgbdk_scrollY=y;
-  SMS_setBGScrollY(y+0xC8);
 }
 
 void scroll_bkg(BYTE x, BYTE y) {
   smsgbdk_scrollX-=x;
-  SMS_setBGScrollX(smsgbdk_scrollX+(256-160)/2);
   smsgbdk_scrollY-=y;
-  SMS_setBGScrollY(smsgbdk_scrollY+0xC8);
 }
 
 
@@ -223,6 +220,7 @@ void smsgbdk_init(UBYTE mode) {
     GG_setBGPaletteColor (3, RGBHTML(0x071820));
     GG_setSpritePaletteColor (3, RGBHTML(0x071820));
   }
+  wait_vbl_done();
 }
 
 /* ************************************************************ */

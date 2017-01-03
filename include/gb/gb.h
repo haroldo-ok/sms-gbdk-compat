@@ -53,6 +53,9 @@
 #define MAXWNDPOSX   0xA6U
 #define MAXWNDPOSY   0x8FU
 
+/* other stuff */
+#define NONBANKED /* none */
+
 /* ************************************************************ */
 
 /*
@@ -154,11 +157,9 @@ smsgbdk_init(UBYTE mode);
 #define SMSGBDK_MODE_GRAYSCALE  1
 #define SMSGBDK_MODE_GBC        2
 
-// SVX temp
-#define NONBANKED /* none */
-void gotogxy(UBYTE x, UBYTE y) {}
-void gprintf(char* s, ...) {}
-// SVX end
+/* ************************************************************ */
+
+
 
 /* ************************************************************ */
 

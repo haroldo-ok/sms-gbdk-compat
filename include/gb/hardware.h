@@ -4,6 +4,7 @@
 #include <types.h>
 
 #define NO_REG		(*(UBYTE *)0x0000)	/* Nowhere */
+#define NO_WREG		(*(UWORD *)0x0000)	/* Nowhere */
 #define P1_REG		NO_REG	/* Joystick: 1.1.P15.P14.P13.P12.P11.P10 */
 #define SB_REG		NO_REG	/* Serial IO data buffer */
 #define SC_REG		NO_REG	/* Serial IO control register */
@@ -33,7 +34,7 @@
 #define NR50_REG	NO_REG	/* Sound register */
 #define NR51_REG	NO_REG	/* Sound register */
 #define NR52_REG	NO_REG	/* Sound register */
-#define LCDC_REG	NO_REG	/* LCD control */
+#define LCDC_REG	NO_WREG	/* LCD control */
 #define STAT_REG	NO_REG	/* LCD status */
 #define SCY_REG    smsgbdk_scrollX  /* Scroll Y */
 #define SCX_REG    smsgbdk_scrollY  /* Scroll X */

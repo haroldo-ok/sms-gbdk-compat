@@ -63,7 +63,13 @@ void disable_interrupts(void) {}
 
 void set_interrupts(UBYTE flags) {}
 
-void reset(void) {}
+void reset(void) {
+  __asm
+    di
+    ld hl,#0x0000
+    jp (hl)
+  __endasm;
+}
 
 void wait_vbl_done(void) {
   SMS_waitForVBlank();
@@ -79,7 +85,7 @@ void display_off(void) {
 
 /* ************************************************************ */
 
-void SMS_loadTiles_2bpp(UWORD first_tile, UBYTE nb_tiles, unsigned char *data) {
+void SMS_loadTiles_2bpp(UWORD first_tile, UWORD nb_tiles, unsigned char *data) {
   UWORD i;
   UBYTE j;
 	unsigned char buffer[32], *o, *d;
@@ -250,3 +256,23 @@ void initarand(UWORD seed) {
 UBYTE arand(void) {
   return rand();
 }
+
+/* ************************************************************ */
+
+void draw_image(void *image) {
+  unsigned int k=0,c,r;
+  SMS_loadTiles_2bpp(0, 360, (unsigned char *)image);
+  for (r=0;r<18;r++) {
+    SMS_setNextTileatXY (0,r);
+    c=0;
+    do {
+      SMS_setTile (k++);
+    } while (++c<20);
+  }
+}
+
+void gotogxy(UBYTE x, UBYTE y) {}
+
+void gprintf(char* s, ...) {}
+
+/* ************************************************************ */

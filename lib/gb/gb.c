@@ -1,15 +1,21 @@
-
 #define TARGET_GG
 #include <gb.h>
 #include <stdlib.h>
 
+/* library variables */
+UBYTE smsgbdk_scrollX, smsgbdk_scrollY;
+
+#pragma disable_warning 85
 void add_VBL(int_handler h) {}
+void remove_VBL(UINT8 h) {}
 void add_LCD(int_handler h) {}
+void remove_LCD(UINT8 h) {}
 void add_TIM(int_handler h) {}
 void add_SIO(int_handler h) {}
 void add_JOY(int_handler h) {}
+
 void mode(UBYTE m) {}
-UBYTE	get_mode(void) {}
+UBYTE	get_mode(void) { return 0; }
 
 /* ************************************************************ */
 
@@ -36,14 +42,14 @@ UBYTE joypad(void) {
 UBYTE waitpad(UBYTE mask) {
   UBYTE joy;
   while (!(joy = joypad() & mask)) {
-    SMS_waitForVBlank();
+    wait_vbl_done();
   }
   return joy;
 }
 
 void waitpadup(void) {
   while (joypad()) {
-    SMS_waitForVBlank();
+    wait_vbl_done();
   }
 }
 
@@ -57,10 +63,19 @@ void disable_interrupts(void) {}
 
 void set_interrupts(UBYTE flags) {}
 
-void reset(void) {}
+void reset(void) {
+  __asm
+    di
+    ld hl,#0x0000
+    jp (hl)
+  __endasm;
+}
 
 void wait_vbl_done(void) {
   SMS_waitForVBlank();
+  SMS_copySpritestoSAT();
+  SMS_setBGScrollX(smsgbdk_scrollX+(256-160)/2);
+  SMS_setBGScrollY(smsgbdk_scrollY+0xC8);
 }
 
 void display_off(void) {
@@ -70,7 +85,7 @@ void display_off(void) {
 
 /* ************************************************************ */
 
-void SMS_loadTiles_2bpp(UWORD first_tile, UBYTE nb_tiles, unsigned char *data) {
+void SMS_loadTiles_2bpp(UWORD first_tile, UWORD nb_tiles, unsigned char *data) {
   UWORD i;
   UBYTE j;
 	unsigned char buffer[32], *o, *d;
@@ -113,12 +128,13 @@ void get_bkg_tiles(UBYTE x,
 }
 
 void move_bkg(UBYTE x, UBYTE y) {
-  SMS_setBGScrollX(x + 48);
-  SMS_setBGScrollY(y - 56);
+  smsgbdk_scrollX=x;
+  smsgbdk_scrollY=y;
 }
 
 void scroll_bkg(BYTE x, BYTE y) {
-
+  smsgbdk_scrollX-=x;
+  smsgbdk_scrollY-=y;
 }
 
 
@@ -147,17 +163,20 @@ void get_sprite_data(UBYTE first_tile, UBYTE nb_tiles, unsigned char *data) {}
 void set_sprite_tile(UBYTE nb, UBYTE tile) {
   SpriteTableXN[(nb << 1) + 1] = tile;
 }
+
 UBYTE get_sprite_tile(UBYTE nb) {
     return SpriteTableXN[(nb << 1) + 1];
 }
 
 void set_sprite_prop(UBYTE nb, UBYTE prop) {}
-UBYTE get_sprite_prop(UBYTE nb) {}
+
+UBYTE get_sprite_prop(UBYTE nb) { return 0; }
 
 void move_sprite(UBYTE nb, UBYTE x, UBYTE y) {
-  SpriteTableXN[nb << 1] = x;
-  SpriteTableY[nb] = y;
+  SpriteTableXN[nb << 1] = x+((256-160)/2-8);
+  SpriteTableY[nb] = y+((192-144)/2-16-1);
 }
+
 void scroll_sprite(BYTE nb, BYTE x, BYTE y) {
   move_sprite(nb, SpriteTableXN[nb << 1] + x, SpriteTableY[nb] + y);
 }
@@ -177,6 +196,38 @@ void cgb_compatibility(void) {
   GG_setSpritePaletteColor (3, 0x022);
 }
 
+/* ************************************************************ */
+
+void smsgbdk_init(UBYTE mode) {
+  unsigned char k;
+  move_bkg(0, 0);
+  SMS_initSprites ();
+  for (k=0;k<128;k++)
+    SMS_reserveSprite ();
+  SMS_finalizeSprites ();
+  if (mode==SMSGBDK_MODE_GBC)
+    cgb_compatibility();
+  else if (mode==SMSGBDK_MODE_GRAYSCALE) {
+    GG_setBGPaletteColor (0, RGBHTML(0xEFEFEF));
+    GG_setSpritePaletteColor (0, RGBHTML(0xEFEFEF));
+    GG_setBGPaletteColor (1, RGBHTML(0xAEAEAE));
+    GG_setSpritePaletteColor (1, RGBHTML(0xAEAEAE));
+    GG_setBGPaletteColor (2, RGBHTML(0x535353));
+    GG_setSpritePaletteColor (2, RGBHTML(0x535353));
+    GG_setBGPaletteColor (3, RGBHTML(0x0C0C0C));
+    GG_setSpritePaletteColor (3, RGBHTML(0x0C0C0C));
+  } else {   // normal 'green' mode
+    GG_setBGPaletteColor (0, RGBHTML(0xDFF9CE));
+    GG_setSpritePaletteColor (0, RGBHTML(0xDFF9CE));
+    GG_setBGPaletteColor (1, RGBHTML(0x86C16C));
+    GG_setSpritePaletteColor (1, RGBHTML(0x86C16C));
+    GG_setBGPaletteColor (2, RGBHTML(0x326856));
+    GG_setSpritePaletteColor (2, RGBHTML(0x326856));
+    GG_setBGPaletteColor (3, RGBHTML(0x071820));
+    GG_setSpritePaletteColor (3, RGBHTML(0x071820));
+  }
+  wait_vbl_done();
+}
 
 /* ************************************************************ */
 
@@ -205,3 +256,23 @@ void initarand(UWORD seed) {
 UBYTE arand(void) {
   return rand();
 }
+
+/* ************************************************************ */
+
+void draw_image(void *image) {
+  unsigned int k=0,c,r;
+  SMS_loadTiles_2bpp(0, 360, (unsigned char *)image);
+  for (r=0;r<18;r++) {
+    SMS_setNextTileatXY (0,r);
+    c=0;
+    do {
+      SMS_setTile (k++);
+    } while (++c<20);
+  }
+}
+
+void gotogxy(UBYTE x, UBYTE y) {}
+
+void gprintf(char* s, ...) {}
+
+/* ************************************************************ */

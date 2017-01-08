@@ -53,6 +53,9 @@
 #define MAXWNDPOSX   0xA6U
 #define MAXWNDPOSY   0x8FU
 
+/* other stuff */
+#define NONBANKED /* none */
+
 /* ************************************************************ */
 
 /*
@@ -60,20 +63,17 @@
  */
 typedef void (*int_handler)(void);
 
-void
-add_VBL(int_handler h);
+void add_VBL(int_handler h);
+void remove_VBL(UINT8 h);
 
-void
-add_LCD(int_handler h);
+void add_LCD(int_handler h);
+void remove_LCD(UINT8 h);
 
-void
-add_TIM(int_handler h);
+void add_TIM(int_handler h);
 
-void
-add_SIO(int_handler h);
+void add_SIO(int_handler h);
 
-void
-add_JOY(int_handler h);
+void add_JOY(int_handler h);
 
 /* ************************************************************ */
 
@@ -151,43 +151,46 @@ extern UBYTE _io_out;
 /* ************************************************************ */
 
 void
+smsgbdk_init(UBYTE mode);
+
+#define SMSGBDK_MODE_NORMAL     0
+#define SMSGBDK_MODE_GRAYSCALE  1
+#define SMSGBDK_MODE_GBC        2
+
+/* ************************************************************ */
+
+
+
+/* ************************************************************ */
+
+void
 delay(UWORD d);
 
 /* ************************************************************ */
 
-UBYTE
-joypad(void);
+UBYTE joypad(void);
 
-UBYTE
-waitpad(UBYTE mask);
+UBYTE waitpad(UBYTE mask);
 
-void
-waitpadup(void);
+void waitpadup(void);
 
 /* ************************************************************ */
 
-void
-enable_interrupts(void);
+void enable_interrupts(void);
 
-void
-disable_interrupts(void);
+void disable_interrupts(void);
 
-void
-set_interrupts(UBYTE flags);
+void set_interrupts(UBYTE flags);
 
-void
-reset(void);
+void reset(void);
 
-void
-wait_vbl_done(void);
+void wait_vbl_done(void);
 
-void
-display_off(void);
+void display_off(void);
 
 /* ************************************************************ */
 
-void
-hiramcpy(UBYTE dst,
+void hiramcpy(UBYTE dst,
 	 const void *src,
 	 UBYTE n);
 

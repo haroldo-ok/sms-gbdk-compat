@@ -17,7 +17,10 @@ UBYTE	get_mode(void) {}
 void delay(UWORD d) {
   UWORD i;
   for (; d; d--) {
-    for (i = 108; i; i--);
+    //  TO DO: see how this compares to original delay
+    __asm
+      nop
+    __endasm;
   }
 }
 

@@ -8,8 +8,11 @@
 /*
  * Macro to create a palette entry out of the color components.
  */
+
+/* SVERX --- removed this because it conflicts with SMSlib macro of the same name
 #define RGB(r, g, b) \
   ((((UWORD)(b) & 0x1f) << 10) | (((UWORD)(g) & 0x1f) << 5) | (((UWORD)(r) & 0x1f) << 0))
+*/
 
 /*
  * Common colors based on the EGA default palette.
